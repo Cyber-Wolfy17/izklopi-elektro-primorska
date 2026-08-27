@@ -1,6 +1,6 @@
 """Constants for the Elektro Primorska izpadi integration."""
 
-DOMAIN = "elektro_izpadi"
+DOMAIN = "izklopi_elektro_primorska"
 
 CONF_KRAJ = "kraj"
 CONF_HISNA_STEVILKA = "hisna_stevilka"

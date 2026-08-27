@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Elektro Primorska - načrtovani izklopi",
+        "title": "Izklopi Elektro Primorska",
         "description": "Spremljanje načrtovanih izklopov za izbrano lokacijo.",
         "data": {
           "kraj": "Kraj",

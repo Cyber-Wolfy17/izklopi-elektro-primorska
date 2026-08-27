@@ -1,0 +1,11 @@
+{
+  "domain": "izklopi_elektro_primorska",
+  "name": "Izklopi Elektro Primorska",
+  "codeowners": ["@Cyber-Wolfy17"],
+  "config_flow": true,
+  "documentation": "https://elektro-primorska.si/izklopi/",
+  "issue_tracker": "https://github.com/Cyber-Wolfy17/izklopi-elektro-primorska/issues",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "1.1.0"
+}

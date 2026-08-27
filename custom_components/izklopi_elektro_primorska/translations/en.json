@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Elektro Primorska - planned outages",
+        "title": "Izklopi Elektro Primorska",
         "description": "Monitor planned power outages for the selected location.",
         "data": {
           "kraj": "Place",

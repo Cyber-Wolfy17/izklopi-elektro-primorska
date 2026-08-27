@@ -1,5 +1,5 @@
 {
-  "name": "Elektro Primorska - planned outages",
+  "name": "Izklopi Elektro Primorska",
   "render_readme": true,
-  "domains": ["sensor"]
+  "domains": ["sensor", "binary_sensor"]
 }
