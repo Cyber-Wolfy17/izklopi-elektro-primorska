@@ -22,7 +22,12 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator: ElektroIzpadiCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([NaslednjiIzpadSensor(coordinator, entry)])
+    async_add_entities(
+        [
+            NaslednjiIzpadSensor(coordinator, entry),
+            KonecIzpadaSensor(coordinator, entry),
+        ]
+    )
 
 
 class NaslednjiIzpadSensor(
@@ -83,4 +88,49 @@ class NaslednjiIzpadSensor(
                 }
                 for o in outages[:MAX_LISTED_OUTAGES]
             ],
+        }
+
+
+class KonecIzpadaSensor(CoordinatorEntity[ElektroIzpadiCoordinator], SensorEntity):
+    """Timestamp of the end of the next planned outage."""
+
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_has_entity_name = True
+    _attr_icon = "mdi:transmission-tower"
+    _attr_name = "Konec izpada"
+
+    def __init__(
+        self, coordinator: ElektroIzpadiCoordinator, entry: ConfigEntry
+    ) -> None:
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{entry.entry_id}_konec_izpada"
+        kraj = entry.data[CONF_KRAJ]
+        hisna = (entry.data.get(CONF_HISNA_STEVILKA) or "").strip()
+        lokacija = f"{kraj} {hisna}".strip()
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, entry.entry_id)},
+            name=f"Elektro izpadi {lokacija}",
+            manufacturer="Elektro Primorska",
+            model="Načrtovani izklopi",
+            entry_type=DeviceEntryType.SERVICE,
+        )
+
+    @property
+    def native_value(self) -> datetime | None:
+        for outage in self.coordinator.data or []:
+            if outage["od"] is not None:
+                return outage["do"]
+        return None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        outages = self.coordinator.data or []
+        naslednji = next((o for o in outages if o["od"] is not None), None)
+        if naslednji is None:
+            return {}
+        return {
+            "kraj": naslednji["kraj"],
+            "ulica": naslednji["lokacija"],
+            "zacetek": naslednji["od"].isoformat(),
+            "akcija": naslednji["akcija"],
         }

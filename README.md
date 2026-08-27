@@ -4,10 +4,13 @@ Home Assistant integracija, ki spremlja [načrtovane izklope električne energij
 
 ## Kako deluje
 
-Integracija periodično (privzeto vsakih 30 minut) prenese seznam napovedanih izklopov in ga filtrira glede na nastavljena **kraj** in **hišno številko**. Senzor `Naslednji izpad` ima:
+Integracija periodično (privzeto vsakih 30 minut) prenese seznam napovedanih izklopov in ga filtrira glede na nastavljena **kraj** in **hišno številko**. Ustvari tri entitete:
 
-- **stanje** = časovni žig začetka naslednjega izklopa (`device_class: timestamp`), oziroma `unknown`, če izklopa ni,
-- **atributi**: kraj, ulica, hišne številke, čas konca, tip akcije, število prihajajočih izklopov in njihov seznam (do 10).
+| Entiteta | Opis |
+|---|---|
+| `sensor.…_naslednji_izpad` | Časovni žig začetka naslednjega izklopa (`device_class: timestamp`), oziroma `unknown`, če izklopa ni. Atributi: kraj, ulica, hišne številke, čas konca, tip akcije, število prihajajočih izklopov in njihov seznam (do 10). |
+| `sensor.…_konec_izpada` | Čas konca istega izklopa. |
+| `binary_sensor.…_izpad_v_teku` | `ON`, ko smo trenutno znotraj termina izklopa (`od ≤ zdaj ≤ do`), sicer `OFF` (`device_class: problem`). Stanje se preklopi točno ob uri začetka oziroma konca izklopa. |
 
 Iskanje se ujema s podnizom v imenu kraja ali ulice, hišna številka pa se primerja točno s seznamom prizadetih številk (npr. `1` ne ustreza `10`). Izklopi brez seznama hišnih številk se upoštevajo vedno, saj običajno prizadenejo celotno območje.
 
@@ -71,10 +74,13 @@ A Home Assistant integration that monitors [planned power outages](https://elekt
 
 ## How it works
 
-The integration periodically (every 30 minutes by default) fetches the list of announced outages and filters it by the configured **place** and **house number**. The `Naslednji izpad` (next outage) sensor provides:
+The integration periodically (every 30 minutes by default) fetches the list of announced outages and filters it by the configured **place** and **house number**. It creates three entities:
 
-- **state** — timestamp of the next outage start (`device_class: timestamp`), or `unknown` when there is none,
-- **attributes** — place, street, house numbers, end time, action type, count of upcoming outages and their list (up to 10).
+| Entity | Description |
+|---|---|
+| `sensor.…_naslednji_izpad` | Timestamp of the next outage start (`device_class: timestamp`), or `unknown` when there is none. Attributes: place, street, house numbers, end time, action type, count of upcoming outages and their list (up to 10). |
+| `sensor.…_konec_izpada` | End time of the same outage. |
+| `binary_sensor.…_izpad_v_teku` | `ON` while the location is inside an outage window (`start <= now <= end`), otherwise `OFF` (`device_class: problem`). The state flips exactly at the outage start/end time. |
 
 Place matching is a substring search on place or street names; the house number is matched exactly against the list of affected numbers (e.g. `1` does not match `10`). Outages without a house-number list are always included, as they typically affect the whole area.
 
