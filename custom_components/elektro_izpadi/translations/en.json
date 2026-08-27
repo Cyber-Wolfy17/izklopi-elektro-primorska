@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Elektro Primorska - planned outages",
+        "description": "Monitor planned power outages for the selected location.",
+        "data": {
+          "kraj": "Place",
+          "hisna_stevilka": "House number",
+          "obmocje": "Area (supervision district)",
+          "update_interval": "Update interval"
+        },
+        "data_description": {
+          "kraj": "E.g. Osp. Matched against place name or street name.",
+          "hisna_stevilka": "Optional. E.g. 1 or 1000 a. If empty, all outages for the place are considered.",
+          "obmocje": "Elektro Primorska supervision district.",
+          "update_interval": "Minutes between data refreshes."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure - Elektro Primorska outages",
+        "data": {
+          "kraj": "Place",
+          "hisna_stevilka": "House number",
+          "obmocje": "Area (supervision district)",
+          "update_interval": "Update interval"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot reach the Elektro Primorska server. Please try again."
+    },
+    "abort": {
+      "already_configured": "This location is already configured.",
+      "reconfigure_successful": "Reconfiguration successful."
+    }
+  }
+}

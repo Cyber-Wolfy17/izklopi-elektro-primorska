@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Elektro Primorska - načrtovani izklopi",
+        "description": "Spremljanje načrtovanih izklopov za izbrano lokacijo.",
+        "data": {
+          "kraj": "Kraj",
+          "hisna_stevilka": "Hišna številka",
+          "obmocje": "Območje (nadzorništvo)",
+          "update_interval": "Interval posodabljanja"
+        },
+        "data_description": {
+          "kraj": "Npr. Osp. Iskanje se ujema s krajem ali imenom ulice.",
+          "hisna_stevilka": "Neobvezno. Npr. 1 ali 1000 a. Če je prazno, se upoštevajo vsi izklopi za kraj.",
+          "obmocje": "Nadzorništvo Elektra Primorska.",
+          "update_interval": "Koliko minut med osvežitvami podatkov."
+        }
+      },
+      "reconfigure": {
+        "title": "Ponastavitev - Elektro Primorska izpadi",
+        "data": {
+          "kraj": "Kraj",
+          "hisna_stevilka": "Hišna številka",
+          "obmocje": "Območje (nadzorništvo)",
+          "update_interval": "Interval posodabljanja"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Ne morem se povezati s strežnikom Elektra Primorska. Poskusite znova."
+    },
+    "abort": {
+      "already_configured": "Ta lokacija je že dodana.",
+      "reconfigure_successful": "Ponastavitev uspešna."
+    }
+  }
+}

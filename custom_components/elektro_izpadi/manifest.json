@@ -1,0 +1,10 @@
+{
+  "domain": "elektro_izpadi",
+  "name": "Elektro Primorska - načrtovani izklopi",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://elektro-primorska.si/izklopi/",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "1.0.0"
+}
