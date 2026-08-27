@@ -1,5 +1,4 @@
 {
   "name": "Izklopi Elektro Primorska",
-  "render_readme": true,
-  "domains": ["sensor", "binary_sensor"]
+  "render_readme": true
 }
