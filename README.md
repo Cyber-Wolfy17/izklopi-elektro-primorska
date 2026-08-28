@@ -6,11 +6,11 @@ Home Assistant integracija, ki spremlja [načrtovane izklope električne energij
 
 Integracija periodično (privzeto vsakih 30 minut) prenese seznam napovedanih izklopov in ga filtrira glede na nastavljena **kraj** in **hišno številko**. Ustvari tri entitete:
 
-| Entiteta | Opis |
-|---|---|
-| `sensor.…_naslednji_izpad` | Časovni žig začetka naslednjega izklopa (`device_class: timestamp`), oziroma `unknown`, če izklopa ni. Atributi: kraj, ulica, hišne številke, čas konca, tip akcije, število prihajajočih izklopov in njihov seznam (do 10). |
-| `sensor.…_konec_izpada` | Čas konca istega izklopa. |
-| `binary_sensor.…_izpad_v_teku` | `ON`, ko smo trenutno znotraj termina izklopa (`od ≤ zdaj ≤ do`), sicer `OFF` (`device_class: problem`). Stanje se preklopi točno ob uri začetka oziroma konca izklopa. |
+| Entiteta | Tip | Opis |
+|---|---|---|
+| `sensor.…_naslednji_izpad` | `sensor`, `device_class: timestamp` | Časovni žig začetka naslednjega izklopa, oziroma `unknown`, če izklopa ni. Atributi: kraj, ulica, hišne številke, čas konca, tip akcije, število prihajajočih izklopov in njihov seznam (do 10). |
+| `sensor.…_konec_izpada` | `sensor`, `device_class: timestamp` | Časovni žig konca istega izklopa, oziroma `unknown`, če izklopa ni. |
+| `binary_sensor.…_izpad_v_teku` | `binary_sensor`, `device_class: problem` | `ON`, ko smo trenutno znotraj termina izklopa (`od ≤ zdaj ≤ do`), sicer `OFF`. Stanje se preklopi točno ob uri začetka oziroma konca izklopa. |
 
 Podrobnosti iskanja:
 
@@ -52,7 +52,7 @@ Avtomatizacija, ki pošlje obvestilo ob novem izklopu:
 alias: Obvestilo o izklopu elektrike
 triggers:
   - trigger: state
-    entity_id: sensor.izklopi_elektro_primorska_osp_1_naslednji_izpad
+    entity_id: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
 actions:
   - action: notify.mobile_app
     data:
@@ -63,6 +63,99 @@ actions:
         od {{ states(trigger.entity_id) }}
         do {{ state_attr(trigger.entity_id, 'konec') }}
 ```
+
+## Primer avtomatizacij
+
+Senzorja `naslednji_izpad` in `konec_izpada` sta časovna žiga, ki ju lahko uporabiš kot vir v časovnem triggerju (`trigger: time`) z nastavljivim `offset`. S tem se avtomatizacija sproži natanko N minut pred začetkom ali po koncu izklopa. Ko je senzor `unknown` (ni napovedanega izklopa), trigger preprosto počaka.
+
+### TTS odštevanje pred izpadom
+
+Avtomatizacija predvaja zvočno obvestilo 1 uro, 45, 30, 15 in 5 minut pred začetkom izklopa. Vsak trigger ima svoj `id`, ki ga sporočilo uporabi za število minut.
+
+```yaml
+alias: "TTS odštevanje pred izpadom"
+triggers:
+  - trigger: time
+    id: "60"
+    at:
+      entity_id: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
+      offset: "-01:00:00"
+  - trigger: time
+    id: "45"
+    at:
+      entity_id: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
+      offset: "-00:45:00"
+  - trigger: time
+    id: "30"
+    at:
+      entity_id: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
+      offset: "-00:30:00"
+  - trigger: time
+    id: "15"
+    at:
+      entity_id: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
+      offset: "-00:15:00"
+  - trigger: time
+    id: "5"
+    at:
+      entity_id: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
+      offset: "-00:05:00"
+actions:
+  - action: tts.say
+    data:
+      entity_id:
+        - media_player.dnevna_soba
+        - media_player.garaza
+      message: >
+        Pozor. Čez {{ trigger.id }} minut se začne napovedani izklop
+        elektrike na naslovu
+        {{ state_attr('sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad', 'ulica') }},
+        {{ state_attr('sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad', 'kraj') }}.
+mode: single
+```
+
+### Izklop avtomatik (npr. senčnikov) med izpadom
+
+Avtomatizacija izklopi navedene avtomatike **1 uro in 5 minut pred** začetkom izklopa (prek `naslednji_izpad`) in jih spet vklopi **1 uro po koncu** izklopa (prek `konec_izpada`).
+
+```yaml
+alias: "Izklop senčnikov med izpadom"
+triggers:
+  - trigger: time
+    id: izklopi
+    at:
+      entity_id: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
+      offset: "-01:05:00"
+  - trigger: time
+    id: vklopi
+    at:
+      entity_id: sensor.izklopi_elektro_primorska_vas_kraj_konec_izpada
+      offset: "01:00:00"
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: izklopi
+        sequence:
+          - action: automation.turn_off
+            target:
+              entity_id:
+                - automation.sencniki_glede_na_sonce
+                - automation.pergola_glede_na_sonce
+      - conditions:
+          - condition: trigger
+            id: vklopi
+        sequence:
+          - action: automation.turn_on
+            target:
+              entity_id:
+                - automation.sencniki_glede_na_sonce
+                - automation.pergola_glede_na_sonce
+mode: single
+```
+
+> **Opomba:** Če se napoved izklopa prekliče po tem, ko so bile avtomatike že izklopljene, ostanejo izklopljene.
 
 ## Opombe
 
