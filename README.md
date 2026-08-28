@@ -6,11 +6,32 @@ Home Assistant integracija, ki spremlja [načrtovane izklope električne energij
 
 Integracija periodično (privzeto vsakih 30 minut) prenese seznam napovedanih izklopov in ga filtrira glede na nastavljena **kraj** in **hišno številko**. Ustvari tri entitete:
 
-| Entiteta | Tip | Opis |
-|---|---|---|
-| `sensor.…_naslednji_izpad` | `sensor`, `device_class: timestamp` | Časovni žig začetka naslednjega izklopa, oziroma `unknown`, če izklopa ni. Atributi: kraj, ulica, hišne številke, čas konca, tip akcije, število prihajajočih izklopov in njihov seznam (do 10). |
-| `sensor.…_konec_izpada` | `sensor`, `device_class: timestamp` | Časovni žig konca istega izklopa, oziroma `unknown`, če izklopa ni. |
-| `binary_sensor.…_izpad_v_teku` | `binary_sensor`, `device_class: problem` | `ON`, ko smo trenutno znotraj termina izklopa (`od ≤ zdaj ≤ do`), sicer `OFF`. Stanje se preklopi točno ob uri začetka oziroma konca izklopa. |
+<table>
+  <thead>
+    <tr>
+      <th align="left">Entiteta</th>
+      <th align="left">Tip</th>
+      <th align="left">Opis</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>sensor.…_naslednji_izpad</code></td>
+      <td><code>sensor</code>, <code>device_class: timestamp</code></td>
+      <td>Časovni žig začetka naslednjega izklopa, oziroma <code>unknown</code>, če izklopa ni. Atributi: kraj, ulica, hišne številke, čas konca, tip akcije, število prihajajočih izklopov in njihov seznam (do 10).</td>
+    </tr>
+    <tr>
+      <td><code>sensor.…_konec_izpada</code></td>
+      <td><code>sensor</code>, <code>device_class: timestamp</code></td>
+      <td>Časovni žig konca istega izklopa, oziroma <code>unknown</code>, če izklopa ni.</td>
+    </tr>
+    <tr>
+      <td><code>binary_sensor.…_izpad_v_teku</code></td>
+      <td><code>binary_sensor</code>, <code>device_class: problem</code></td>
+      <td><code>ON</code>, ko smo trenutno znotraj termina izklopa (<code>od ≤ zdaj ≤ do</code>), sicer <code>OFF</code>. Stanje se preklopi točno ob uri začetka oziroma konca izklopa.</td>
+    </tr>
+  </tbody>
+</table>
 
 Podrobnosti iskanja:
 
@@ -35,12 +56,32 @@ Podrobnosti iskanja:
 
 Nastavitve → Naprave in storitve → Dodaj integracijo → **Izklopi Elektro Primorska**:
 
-| Polje | Opis |
-|---|---|
-| Kraj | Npr. `Osp`. Ujema se s krajem ali imenom ulice. |
-| Hišna številka | Neobvezno, npr. `1` ali `1000 a`. Če je prazno, se upoštevajo vsi izklopi za kraj. |
-| Območje | Nadzorništvo Elektra Primorska (privzeto vsa). |
-| Interval posodabljanja | Minute med osvežitvami (privzeto 30). |
+<table>
+  <thead>
+    <tr>
+      <th align="left">Polje</th>
+      <th align="left">Opis</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Kraj</td>
+      <td>Npr. <code>Osp</code>. Ujema se s krajem ali imenom ulice.</td>
+    </tr>
+    <tr>
+      <td>Hišna številka</td>
+      <td>Neobvezno, npr. <code>1</code> ali <code>1000 a</code>. Če je prazno, se upoštevajo vsi izklopi za kraj.</td>
+    </tr>
+    <tr>
+      <td>Območje</td>
+      <td>Nadzorništvo Elektra Primorska (privzeto vsa).</td>
+    </tr>
+    <tr>
+      <td>Interval posodabljanja</td>
+      <td>Minute med osvežitvami (privzeto 30).</td>
+    </tr>
+  </tbody>
+</table>
 
 Nastavitve lahko kadarkoli spremeniš prek **Reconfigure** na kartici integracije.
 
