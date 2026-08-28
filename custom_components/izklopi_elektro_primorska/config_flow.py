@@ -127,7 +127,7 @@ class ElektroIzpadiConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
-        assert entry
+        assert entry  # nosec B101
 
         errors: dict[str, str] = {}
         if user_input is not None:
