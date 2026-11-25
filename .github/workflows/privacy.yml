@@ -1,0 +1,22 @@
+name: Privacy check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  privacy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Scan tracked files for protected terms
+        env:
+          PRIVACY_TERMS: ${{ secrets.PRIVACY_TERMS }}
+        run: |
+          if [ -z "$PRIVACY_TERMS" ]; then
+            echo "PRIVACY_TERMS secret is not set" >&2
+            exit 1
+          fi
+          python3 scripts/privacy_check.py --tracked
