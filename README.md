@@ -64,6 +64,34 @@ actions:
         do {{ state_attr(trigger.entity_id, 'konec') }}
 ```
 
+## Lovelace kartica
+
+Integracija prinese kartico **Izklopi Elektro – načrtovan izpad**, ki prikazuje odštevanje do naslednjega izklopa. Kartica se naloži samodejno; v urejevalniku dashboarda jo najdeš pod **Dodaj kartico**.
+
+| Polje | Opis |
+|---|---|
+| Entiteta naslednjega izpada | `sensor.…_naslednji_izpad` |
+| Naslov | Naslov kartice (privzeto »⚠️ Načrtovan izklop elektrike«) |
+| Skrij po koncu izpada | Če je vklopljeno, kartica po koncu izpada izgine |
+
+Obnašanje:
+
+- **pred izpadom:** rdeč utripajoč okvir in »DO IZPADA«,
+- **med izpadom:** oranžen utripajoč okvir in »DO KONCA IZPADA«,
+- **po koncu:** »IZPAD ✓ KONČAN« (če ni izbrano skrivanje),
+- kartica se skrije, ko je senzor `unknown` ali `unavailable`.
+
+Primer YAML:
+
+```yaml
+type: custom:izklopi-elektro-card
+entity: sensor.izklopi_elektro_primorska_vas_kraj_naslednji_izpad
+name: ⚠️ Načrtovan izklop elektrike
+hide_after_end: true
+```
+
+Po prvi namestitvi ali posodobitvi integracije je potreben ponovni zagon Home Assistant.
+
 ## Primer avtomatizacij
 
 Senzorja `naslednji_izpad` in `konec_izpada` sta časovna žiga, ki ju lahko uporabiš kot vir v časovnem triggerju (`trigger: time`) z nastavljivim `offset`. S tem se avtomatizacija sproži natanko N minut pred začetkom ali po koncu izklopa. Ko je senzor `unknown` (ni napovedanega izklopa), trigger preprosto počaka.

@@ -3,9 +3,10 @@
   "name": "Izklopi Elektro Primorska",
   "codeowners": ["@Cyber-Wolfy17"],
   "config_flow": true,
+  "dependencies": ["frontend", "http"],
   "documentation": "https://elektro-primorska.si/izklopi/",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/Cyber-Wolfy17/izklopi-elektro-primorska/issues",
   "requirements": [],
-  "version": "1.1.2"
+  "version": "1.2.0"
 }
