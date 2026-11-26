@@ -55,7 +55,12 @@ class IzklopiElektroCard extends HTMLElement {
   }
 
   getCardSize() {
-    return 3;
+    return this._hidden ? 0 : 3;
+  }
+
+  _setHidden(hidden) {
+    this._hidden = hidden;
+    this.style.display = hidden ? "none" : "";
   }
 
   _build() {
@@ -159,7 +164,7 @@ class IzklopiElektroCard extends HTMLElement {
     if (!this._els || !this._config) return;
     const s = this._hass?.states[this._config.entity];
     if (!s || s.state === "unknown" || s.state === "unavailable") {
-      this.style.display = "none";
+      this._setHidden(true);
       return;
     }
 
@@ -167,17 +172,17 @@ class IzklopiElektroCard extends HTMLElement {
     const start = new Date(s.state).getTime();
     const end = new Date(s.attributes.konec).getTime();
     if (isNaN(start) || isNaN(end)) {
-      this.style.display = "none";
+      this._setHidden(true);
       return;
     }
 
     const pre = now < start;
     const during = !pre && now < end;
     if (!pre && !during && this._config.hide_after_end) {
-      this.style.display = "none";
+      this._setHidden(true);
       return;
     }
-    this.style.display = "";
+    this._setHidden(false);
 
     const e = this._els;
     e.card.className = "card" + (pre ? " pre" : "");
